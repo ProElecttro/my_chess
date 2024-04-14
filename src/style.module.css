@@ -1,0 +1,55 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.chessBoard{
+    margin-top: 1rem;
+    /* background-color: red; */
+    border: 6px solid #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.rows{
+    display: flex;
+}
+
+.chessBox{
+    width: 60px;
+    height: 60px;
+    border: solid 1px #000;;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+}
+
+.piece{
+    width: 60px;
+}
+
+.piece:hover {
+    scale: 1.1;
+}
+
+.BlackKillBox,
+.WhiteKillBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 480px;
+}
+
+.WhiteKillBox{
+    justify-content: flex-end;
+}
+
+.kills{
+    width: 30px;
+    margin-inline: 1rem;
+    padding: 0.2rem;
+}
