@@ -3,7 +3,7 @@ import { positions, setPositions, highlight, setHighlight } from "./App";
 const pawn = (x, y) => {
     if (positions[x][y] && positions[x][y].piece === "pawn") {
       let newHighlight = [...highLight];
-      // Enclose the ternary expressions within parentheses
+      
       newHighlight[x + (positions[x][y].color === "black" ? 1 : -1)][y] = "skyblue";
       newHighlight[x + (positions[x][y].color === "black" ? 2 : -2)][y] = "skyblue";
       setHighlight(newHighlight);
@@ -14,14 +14,13 @@ const pawn = (x, y) => {
     if (positions[x][y] && positions[x][y].piece === "rook") {
       let newHighlight = [...highLight];
   
-      // Highlight vertically
+      
       for (let i = 0; i < 8; i++) {
         if (i !== x) {
           newHighlight[i][y] = "skyblue";
         }
       }
-  
-      // Highlight horizontally
+
       for (let j = 0; j < 8; j++) {
         if (j !== y) {
           newHighlight[x][j] = "skyblue";
@@ -36,7 +35,7 @@ const pawn = (x, y) => {
     if (positions[x][y] && positions[x][y].piece === "knight") {
       let newHighlight = [...highLight];
   
-      // Possible knight moves
+      
       const moves = [
         [x + 2, y + 1],
         [x + 2, y - 1],
@@ -48,7 +47,7 @@ const pawn = (x, y) => {
         [x - 1, y - 2]
       ];
   
-      // Highlight valid moves
+
       moves.forEach(([nx, ny]) => {
         if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
           newHighlight[nx][ny] = "skyblue";
@@ -63,7 +62,7 @@ const pawn = (x, y) => {
     if (positions[x][y] && positions[x][y].piece === "king") {
       let newHighlight = [...highLight];
   
-      // Possible king moves
+
       const moves = [
         [x + 1, y],
         [x - 1, y],
@@ -75,7 +74,7 @@ const pawn = (x, y) => {
         [x - 1, y - 1]
       ];
   
-      // Highlight valid moves
+
       moves.forEach(([nx, ny]) => {
         if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
           newHighlight[nx][ny] = "skyblue";
@@ -91,21 +90,21 @@ const pawn = (x, y) => {
     if (positions[x][y] && positions[x][y].piece === "queen") {
       let newHighlight = [...highLight];
   
-      // Highlight vertically
+
       for (let i = 0; i < 8; i++) {
         if (i !== x) {
           newHighlight[i][y] = "skyblue";
         }
       }
   
-      // Highlight horizontally
+
       for (let j = 0; j < 8; j++) {
         if (j !== y) {
           newHighlight[x][j] = "skyblue";
         }
       }
   
-      // Highlight diagonally
+
       for (let i = 1; i < 8; i++) {
         if (x + i < 8 && y + i < 8) {
           newHighlight[x + i][y + i] = "skyblue";
@@ -129,7 +128,7 @@ const pawn = (x, y) => {
     if (positions[x][y] && positions[x][y].piece === "bishop") {
       let newHighlight = [...highLight];
   
-      // Highlight diagonally
+
       for (let i = 1; i < 8; i++) {
         if (x + i < 8 && y + i < 8) {
           newHighlight[x + i][y + i] = "skyblue";
