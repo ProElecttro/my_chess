@@ -86,14 +86,7 @@ function App() {
   const [positions, setPositions] = useState(initial_positions);
   const [pick, setPick] = useState([-1, -1]);
 
-  const ENDPOINT =  "http://localhost:5000"
-  
-  const socket = useMemo(
-    () =>
-      io("http://localhost:5000"),
-    []
-  );  
-
+  const socket = io("http://localhost:5000");
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -102,7 +95,7 @@ function App() {
     
     socket.on("newStateReceived", ({ positions, whoseTurn }) => {
       setPositions(positions);
-      setWhoseTurn((whoseTurn == "white") ? "black" : "white");
+      setWhoseTurn((whoseTurn === "white") ? "black" : "white");
     });
 
     return () => {
