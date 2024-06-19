@@ -10,7 +10,7 @@ const HomePage = ({ roomCode, setRoomCode }) => {
 
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
-    return io('http://localhost:8000');
+    return io('http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/');
   }, []);
 
   useEffect(() => {
