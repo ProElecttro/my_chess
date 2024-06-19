@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Game from './Game';
+import Game from './Games';
 import HomePage from './HomePage';
 
 function App() {
