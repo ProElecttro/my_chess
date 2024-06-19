@@ -75,7 +75,7 @@ const initialHighlight = [
   ["white", "gray", "white", "gray", "white", "gray", "white", "gray"]
 ];
 
-const socket = io('http://localhost:8000');
+const socket = io('http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/');
 
 const Game = () => {
   const location = useLocation();

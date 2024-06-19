@@ -10,7 +10,8 @@ const HomePage = ({ roomCode, setRoomCode }) => {
 
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
-    return io('http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/');
+    let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/'
+    return io(url);
   }, []);
 
   useEffect(() => {
@@ -75,7 +76,7 @@ const HomePage = ({ roomCode, setRoomCode }) => {
   };
 
   // Conditional rendering based on room size
-  if (roomSize == 1) {
+  if (roomSize === 1) {
     return (
       <div className={styles.loading}>
         <p>Waiting for players to join...</p>
