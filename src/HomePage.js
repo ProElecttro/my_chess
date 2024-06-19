@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function HomePage({ roomCode, setRoomCode }) {
@@ -6,6 +6,7 @@ function HomePage({ roomCode, setRoomCode }) {
 
   const handleJoinRoom = () => {
     // Navigate to the game page with the entered room code
+    fetchData();
     navigate(`/game/${roomCode}`);
   };
 
@@ -24,6 +25,14 @@ function HomePage({ roomCode, setRoomCode }) {
     }
     return code;
   };
+
+  let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/';
+  const fetchData  = async ()=>{
+    const response = await fetch("http://localhost:8000/");
+    const data = await response.json();
+    alert('connected to server', data);
+    console.log("connected to server", data);
+  }
 
   return (
     <div className="homepage">
