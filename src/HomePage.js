@@ -26,9 +26,8 @@ function HomePage({ roomCode, setRoomCode }) {
     return code;
   };
 
-  let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/';
   const fetchData  = async ()=>{
-    const response = await fetch(url);
+    const response = await fetch("http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/");
     const data = await response.json();
     alert('connected to server', data);
     console.log("connected to server", data);
