@@ -1,7 +1,3 @@
-*{
-  margin: 0px;
-  padding: 0px;
-}
 .container {
   display: flex;
   flex-direction: column;
@@ -59,12 +55,6 @@
 
 .WhiteKillBox {
   justify-content: flex-end;
-}
-
-.kills {
-  width: 1.4rem;
-  margin-inline: 1rem;
-  padding: 0.2rem;
 }
 
 .grayBox {

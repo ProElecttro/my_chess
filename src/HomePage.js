@@ -11,13 +11,12 @@ function HomePage({ roomCode, setRoomCode }) {
 
   const handleGenerateRoomCode = () => {
     // Generate a random room code (you can implement your logic here)
-    const generatedCode = generateRandomRoomCode(); // Implement this function
+    const generatedCode = generateRandomRoomCode();
     setRoomCode(generatedCode);
     navigate(`/game/${generatedCode}`);
   };
 
   const generateRandomRoomCode = () => {
-    // Example function to generate a random 6-character alphanumeric code
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let code = '';
     for (let i = 0; i < 6; i++) {

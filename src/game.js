@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Game.module.css'; // Importing CSS module for styling
-import black_pawn from './assets/black_pieces/pawn.png';
-import white_pawn from './assets/white_pieces/pawn.png';
+import black_pawn from './assets/black_pieces/pawn.png'; // Importing images for black pieces
+import white_pawn from './assets/white_pieces/pawn.png'; // Importing images for white pieces
 import white_rook from './assets/white_pieces/rook.png';
 import black_rook from './assets/black_pieces/rook.png';
 import white_bishop from './assets/white_pieces/bishop.png';
