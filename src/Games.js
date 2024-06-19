@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import styles from './Game.module.css'; // Importing CSS module for styling
+import io from 'socket.io-client';
+
 import black_pawn from './assets/black_pieces/pawn.png'; // Importing images for black pieces
 import white_pawn from './assets/white_pieces/pawn.png'; // Importing images for white pieces
 import white_rook from './assets/white_pieces/rook.png';
@@ -72,44 +75,64 @@ const initialHighlight = [
   ["white", "gray", "white", "gray", "white", "gray", "white", "gray"]
 ];
 
-const indices = [1, 2, 3, 4, 5, 6, 7, 8];
-const alphas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const socket = io('http://localhost:8000');
 
 const Game = () => {
+  const location = useLocation();
   const [positions, setPositions] = useState(initialPositions);
-  const [highLight, setHighLight] = useState(initialHighlight);
+  const [highlight, setHighlight] = useState(initialHighlight);
 
-  // Function to handle click on a chess box
+  useEffect(() => {
+    if (location.state && location.state.roomId) {
+      const { roomId } = location.state;
+
+      // Event listener for moveMade
+      socket.on('moveMade', ({ moves, highlight, board }) => {
+        console.log('Move received:', moves);
+        console.log('Highlight:', highlight);
+        console.log('Updated board:', board);
+        // Update positions and highlight state based on received data
+        setPositions(board); // Update board positions
+        setHighlight(highlight); // Update highlight
+      });
+
+      // Cleanup on component unmount
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [location.state]);
+
   const handleOnClick = (rowIndex, colIndex) => {
-    // Implement logic to send move to backend and receive updated positions
     console.log(`Clicked on position ${rowIndex}-${colIndex}`);
     // Example logic to update positions (dummy logic)
     const updatedPositions = [...positions];
     updatedPositions[rowIndex][colIndex] = { piece: "pawn", image: white_pawn, owner: "white" }; // Example update
     setPositions(updatedPositions);
+
+    if (location.state && location.state.roomId) {
+      // Emit makeMove event with roomId, from, to, and playerName
+      socket.emit('makeMove', location.state.roomId, `${rowIndex}-${colIndex}`, 'to', 'PlayerName'); // Replace 'PlayerName' with actual player name
+    }
   };
 
-  // Rendering the chessboard UI
   return (
     <div className={styles.container}>
       <p>Grandmaster's Arena</p>
       <div className={styles.chessContainer}>
         <div className={styles.BlackKillBox}>
           {/* Render black kills here */}
-          {/* Example: <img src={blackKill} alt="+1" className={styles.kills} /> */}
         </div>
         <div className={styles.chessBoard}>
-          {indices.map((number) => (
-            <div key={number} className={styles.rows}>
-              {alphas.map((alpha) => (
+          {positions.map((row, rowIndex) => (
+            <div key={rowIndex} className={styles.rows}>
+              {row.map((cell, colIndex) => (
                 <div
-                  onClick={() => handleOnClick(indices.indexOf(number), alphas.indexOf(alpha))}
-                  key={`${number}-${alpha}`}
-                  className={`${styles.chessBox} ${highLight[indices.indexOf(number)][alphas.indexOf(alpha)] === "gray" ? styles.grayBox : styles.whiteBox}`}
+                  key={`${rowIndex}-${colIndex}`}
+                  className={`${styles.chessBox} ${highlight[rowIndex][colIndex] === 'gray' ? styles.grayBox : styles.whiteBox}`}
+                  onClick={() => handleOnClick(rowIndex, colIndex)}
                 >
-                  {positions[number - 1][alphas.indexOf(alpha)] &&
-                    <img src={positions[number - 1][alphas.indexOf(alpha)].image} alt="piece" className={styles.piece} />
-                  }
+                  {cell && <img src={cell.image} alt="piece" className={styles.piece} />}
                 </div>
               ))}
             </div>
@@ -117,7 +140,6 @@ const Game = () => {
         </div>
         <div className={styles.WhiteKillBox}>
           {/* Render white kills here */}
-          {/* Example: <img src={whiteKill} alt="+1" className={styles.kills} /> */}
         </div>
       </div>
     </div>

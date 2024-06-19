@@ -1,20 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './homepage.module.css';
+import io from 'socket.io-client';
 
-function HomePage({ roomCode, setRoomCode }) {
+const HomePage = ({ roomCode, setRoomCode }) => {
+  const [isCopied, setIsCopied] = useState(false);
+  const [roomSize, setRoomSize] = useState(0); // Track room size
   const navigate = useNavigate();
 
+  const socket = useMemo(() => {
+    console.log('Creating socket instance...');
+    return io('http://localhost:8000');
+  }, []);
+
+  useEffect(() => {
+    const handlePlayerJoined = (playerName) => {
+      console.log(`${playerName} joined the room`);
+      setRoomSize((prevSize) => prevSize + 1); // Increment room size on player join
+    };
+    socket.on('playerJoined', handlePlayerJoined);
+
+    const handleStartGame = ({ gameId, board }) => {
+      console.log(`Game started with ID: ${gameId}`);
+      navigate(`/game/${gameId}`);
+    };
+    socket.on('startGame', handleStartGame);
+
+    const handleRoomFull = () => {
+      alert('Room is full. Please try another room.');
+      // Handle UI feedback for room full
+    };
+    socket.on('roomFull', handleRoomFull);
+
+    return () => {
+      console.log('Disconnecting socket...');
+      socket.off('playerJoined', handlePlayerJoined);
+      socket.off('startGame', handleStartGame);
+      socket.off('roomFull', handleRoomFull);
+      socket.disconnect();
+    };
+  }, [socket, navigate]);
+
   const handleJoinRoom = () => {
-    // Navigate to the game page with the entered room code
-    fetchData();
-    navigate(`/game/${roomCode}`);
+    if (roomCode) {
+      socket.emit('joinRoom', roomCode, 'PlayerName'); // Replace 'PlayerName' with actual player name
+    } else {
+      alert('Please enter or generate a room code first.');
+    }
   };
 
   const handleGenerateRoomCode = () => {
-    // Generate a random room code (you can implement your logic here)
     const generatedCode = generateRandomRoomCode();
     setRoomCode(generatedCode);
-    navigate(`/game/${generatedCode}`);
   };
 
   const generateRandomRoomCode = () => {
@@ -26,31 +63,52 @@ function HomePage({ roomCode, setRoomCode }) {
     return code;
   };
 
-  const fetchData  = async ()=>{
-    const response = await fetch("http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/");
-    const data = await response.json();
-    alert('connected to server', data);
-    console.log("connected to server", data);
+  const handleCopyCode = () => {
+    if (roomCode) {
+      navigator.clipboard.writeText(roomCode).then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000); // Reset copy status after 2 seconds
+      });
+    } else {
+      alert('No room code to copy.');
+    }
+  };
+
+  // Conditional rendering based on room size
+  if (roomSize == 1) {
+    return (
+      <div className={styles.loading}>
+        <p>Waiting for players to join...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="homepage">
-      <h1>Welcome to Chess Game</h1>
-      <div className="join">
+    <div className={styles.homepage}>
+      <h1 className={styles.title}>Welcome to Chess Game</h1>
+      <div className={styles.join}>
         <input
+          className={styles.input}
           type="text"
           placeholder="Enter Room Code"
           value={roomCode}
           onChange={(e) => setRoomCode(e.target.value)}
         />
-        <button onClick={handleJoinRoom}>Join Room</button>
+        <button className={styles.copyButton} onClick={handleCopyCode}>
+          {isCopied ? 'Copied!' : 'Copy'}
+        </button>
+        <button className={styles.joinButton} onClick={handleJoinRoom}>
+          Join Room
+        </button>
       </div>
-      <div className="or">
+      <div className={styles.or}>
         <p>or</p>
       </div>
-      <button onClick={handleGenerateRoomCode}>Generate Room Code</button>
+      <button className={styles.generateButton} onClick={handleGenerateRoomCode}>
+        Generate Room Code
+      </button>
     </div>
   );
-}
+};
 
 export default HomePage;
