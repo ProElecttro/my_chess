@@ -66,14 +66,19 @@ const HomePage = ({ roomCode, setRoomCode }) => {
 
   const handleCopyCode = () => {
     if (roomCode) {
-      navigator.clipboard.writeText(roomCode).then(() => {
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 2000); // Reset copy status after 2 seconds
-      });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(roomCode).then(() => {
+          setIsCopied(true);
+          setTimeout(() => setIsCopied(false), 2000); // Reset copy status after 2 seconds
+        });
+      } else {
+        alert('Clipboard API is not available. Please copy the code manually.');
+      }
     } else {
       alert('No room code to copy.');
     }
   };
+  
 
   // Conditional rendering based on room size
   if (roomSize === 1) {
