@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Game from './Games';
-import HomePage from './HomePage';
+import Game from './Games.js';
+import HomePage from './HomePage.js';
 
 function App() {
   const [roomCode, setRoomCode] = useState('');
