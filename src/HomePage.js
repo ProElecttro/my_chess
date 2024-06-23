@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './homepage.module.css';
 import io from 'socket.io-client';
-import Loading from './Loading';
+import Loading from './loading';
 
 const HomePage = ({ roomCode, setRoomCode }) => {
   const [roomSize, setRoomSize] = useState(0); // Track room size
