@@ -2,15 +2,16 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './homepage.module.css';
 import io from 'socket.io-client';
+import Loading from './loading';
 
 const HomePage = ({ roomCode, setRoomCode }) => {
-  const [isCopied, setIsCopied] = useState(false);
   const [roomSize, setRoomSize] = useState(0); // Track room size
   const navigate = useNavigate();
 
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
-    let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/'
+    // http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/
+    let url = 'http://localhost:8000/';
     return io(url);
   }, []);
 
@@ -64,28 +65,10 @@ const HomePage = ({ roomCode, setRoomCode }) => {
     return code;
   };
 
-  const handleCopyCode = () => {
-    if (roomCode) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(roomCode).then(() => {
-          setIsCopied(true);
-          setTimeout(() => setIsCopied(false), 2000); // Reset copy status after 2 seconds
-        });
-      } else {
-        alert('Clipboard API is not available. Please copy the code manually.');
-      }
-    } else {
-      alert('No room code to copy.');
-    }
-  };
-  
-
   // Conditional rendering based on room size
   if (roomSize === 1) {
     return (
-      <div className={styles.loading}>
-        <p>Waiting for players to join...</p>
-      </div>
+      <Loading roomCode={roomCode} />
     );
   }
 
@@ -100,9 +83,6 @@ const HomePage = ({ roomCode, setRoomCode }) => {
           value={roomCode}
           onChange={(e) => setRoomCode(e.target.value)}
         />
-        <button className={styles.copyButton} onClick={handleCopyCode}>
-          {isCopied ? 'Copied!' : 'Copy'}
-        </button>
         <button className={styles.joinButton} onClick={handleJoinRoom}>
           Join Room
         </button>

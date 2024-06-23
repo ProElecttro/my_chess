@@ -1,93 +1,49 @@
-:root {
-    --primary-color: #1a73e8;
-    --secondary-color: #34a853;
-    --text-color: #ffffff;
-    --background-color: #121212;
-    --border-color: #3c4043;
-  }
-  
-  .homepage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  .title {
-    font-size: 2.5em;
-    margin-bottom: 40px;
-    color: var(--primary-color);
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .join {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  .input {
-    flex-grow: 1;
-    padding: 15px;
-    font-size: 1.2em;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-right: 10px;
-    background-color: #282828;
-    color: var(--text-color);
-  }
-  
-  .copyButton, .joinButton, .generateButton {
-    padding: 15px 30px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .copyButton {
-    margin-right: 10px;
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-  }
-  
-  .copyButton:hover {
-    background-color: #2a8f45;
-  }
-  
-  .joinButton {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-  }
-  
-  .joinButton:hover {
-    background-color: #1558c0;
-  }
-  
-  .or {
-    margin: 20px 0;
-  }
-  
-  .or p {
-    font-size: 1.2em;
-    color: #b0b0b0;
-  }
-  
-  .generateButton {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-  }
-  
-  .generateButton:hover {
-    background-color: #2a8f45;
-  }
-  
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.join {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.input {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.joinButton, .generateButton {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.joinButton:hover, .generateButton:hover {
+  background-color: #45a049;
+}
+
+.or {
+  margin: 20px 0;
+  font-size: 18px;
+  color: #777;
+}
