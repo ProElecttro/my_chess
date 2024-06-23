@@ -31,7 +31,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@52.66.42.129 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@172.31.45.115 << 'EOF'
             cd /home/ubuntu/my_chess
             ./deploy.sh
           EOF
