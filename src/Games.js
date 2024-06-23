@@ -15,8 +15,15 @@ import black_knight from './assets/black_pieces/knight.png';
 import io from 'socket.io-client';
 
 function Game() {
-  const player = localStorage.getItem('color');
-  
+  function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+      "(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+  }
+
+  const player = getCookie('color');
+
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
     let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/';
@@ -78,7 +85,7 @@ function Game() {
   const [capturedWhitePieces, setCapturedWhitePieces] = useState([]);
   const [capturedBlackPieces, setCapturedBlackPieces] = useState([]);
 
-  socket.on('makeMove', ({fromCoord, toCoord})=>{
+  socket.on('makeMove', ({ fromCoord, toCoord }) => {
     console.log(fromCoord, toCoord);
     let fromX = fromCoord.x;
     let fromY = fromCoord.y;
@@ -90,7 +97,7 @@ function Game() {
     newPositions[toX][toY] = newPositions[fromX][fromY];
     newPositions[fromX][fromY] = null;
     setPositions(newPositions);
-    
+
     if (capturedPiece) {
       if (capturedPiece.color === "white") {
         setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
@@ -345,9 +352,9 @@ function Game() {
     newPositions[toX][toY] = newPositions[fromX][fromY];
     newPositions[fromX][fromY] = null;
     setPositions(newPositions);
-     
+
     socket.emit('movePiece', { from: { x: fromX, y: fromY }, to: { x: toX, y: toY } });
-    
+
     if (capturedPiece) {
       if (capturedPiece.color === "white") {
         setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
@@ -360,9 +367,9 @@ function Game() {
   };
 
   const switchTurn = () => {
-    if(whoseTurn === "black") {
+    if (whoseTurn === "black") {
       setWhoseTurn("white");
-    }else{
+    } else {
       setWhoseTurn("black");
     }
   };
@@ -372,11 +379,11 @@ function Game() {
       <div className={styles.capturedPieces}>
         <div className={styles.capturedPiecesList}>
           <ul>
-          <h4>White Kills</h4>
+            <h4>White Kills</h4>
             {capturedWhitePieces.map((piece, index) => (
               <li key={index} className={styles.kill}>
-              <img src={piece.image} alt={piece.piece}/>
-            </li>
+                <img src={piece.image} alt={piece.piece} />
+              </li>
             ))}
           </ul>
         </div>
@@ -387,10 +394,10 @@ function Game() {
                 <div
                   key={colIndex}
                   className={`${styles.cell} ${highlightedCells[rowIndex][colIndex] === "skyblue"
-                      ? styles.highlighted
-                      : highlightedCells[rowIndex][colIndex] === "red"
-                        ? styles.capture
-                        : ""
+                    ? styles.highlighted
+                    : highlightedCells[rowIndex][colIndex] === "red"
+                      ? styles.capture
+                      : ""
                     }`}
                   onClick={() => handleCellClick(rowIndex, colIndex)}
                 >
@@ -402,10 +409,10 @@ function Game() {
         </div>
         <div className={styles.capturedPiecesList}>
           <ul>
-          <h4>Black Kills</h4>
+            <h4>Black Kills</h4>
             {capturedBlackPieces.map((piece, index) => (
               <li key={index} className={styles.kill}>
-                <img src={piece.image} alt={piece.piece}/>
+                <img src={piece.image} alt={piece.piece} />
               </li>
             ))}
           </ul>

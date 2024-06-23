@@ -20,7 +20,8 @@ const HomePage = ({ roomCode, setRoomCode }) => {
       console.log('Received color:', playerColor);
       if (isempty) {
         isempty = false;
-        localStorage.setItem('color', playerColor)
+        // localStorage.setItem('color', playerColor)
+        document.cookie = `color=${playerColor}; path=/; max-age=7200`;
       }
 
       setRoomSize((prevSize) => prevSize + 1);
