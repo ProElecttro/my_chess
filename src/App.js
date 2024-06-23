@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage';
 import Game from './Games';
@@ -9,8 +9,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage roomCode={roomCode} setRoomCode={setRoomCode} />} />
-        <Route path="/game/:roomId" element={<Game />} />
+        <Route path="/" element={<HomePage roomCode={roomCode} setRoomCode={setRoomCode}/>} />
+        <Route path="/game/:roomId" element={<Game/>} />
       </Routes>
     </BrowserRouter>
   );

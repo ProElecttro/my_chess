@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './Game.module.css';
 import black_pawn from './assets/black_pieces/pawn.png';
 import white_pawn from './assets/white_pieces/pawn.png';
@@ -12,8 +12,39 @@ import white_queen from './assets/white_pieces/queen.png';
 import black_queen from './assets/black_pieces/queen.png';
 import white_knight from './assets/white_pieces/knight.png';
 import black_knight from './assets/black_pieces/knight.png';
+import io from 'socket.io-client';
 
 function Game() {
+  const socket = useMemo(() => {
+    console.log('Creating socket instance...');
+    let url = 'http://localhost:8000/';
+    return io(url);
+  }, []);
+
+  const [isYourMove, setYourMove] = useState(true);
+
+  socket.on('makeMove', ({fromCoord, toCoord})=>{
+    console.log(fromCoord, toCoord);
+    let fromX = fromCoord.x;
+    let fromY = fromCoord.y;
+    let toX = toCoord.x;
+    let toY = toCoord.x;
+
+    const newPositions = positions.map(row => row.slice());
+    const capturedPiece = newPositions[toX][toY];
+    newPositions[toX][toY] = newPositions[fromX][fromY];
+    newPositions[fromX][fromY] = null;
+    setPositions(newPositions);
+    
+    if (capturedPiece) {
+      if (capturedPiece.color === "white") {
+        setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
+      } else if (capturedPiece.color === "black") {
+        setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
+      }
+    }
+  })
+
   const initialPositions = [
     [
       { piece: "rook", image: black_rook, color: "black" },
@@ -310,8 +341,9 @@ function Game() {
     newPositions[toX][toY] = newPositions[fromX][fromY];
     newPositions[fromX][fromY] = null;
     setPositions(newPositions);
-
-    // Update captured pieces
+     
+    socket.emit('movePiece', { from: { x: fromX, y: fromY }, to: { x: toX, y: toY } });
+    
     if (capturedPiece) {
       if (capturedPiece.color === "white") {
         setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
