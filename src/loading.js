@@ -73,7 +73,7 @@ const InputField = styled.input`
 const Button = styled.button`
   padding: 10px 20px;
   margin-top: 10px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
@@ -96,7 +96,7 @@ const SuccessMessage = styled.div`
 `;
 
 // Main Loading component
-function Loading({ roomCode }) {
+const Loading = ({ roomCode }) => {
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
 
@@ -118,8 +118,9 @@ function Loading({ roomCode }) {
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
         setMessage('Room code sent successfully!');
-      }, (error) => {
-        console.log('FAILED...', error);
+      })
+      .catch((error) => {
+        console.error('FAILED...', error);
         setMessage('Failed to send room code. Please try again.');
       });
   };
@@ -142,12 +143,16 @@ function Loading({ roomCode }) {
           />
           <Button type="submit">Send Room Code</Button>
         </form>
-        {message && (message.includes('successfully') ? 
-          <SuccessMessage>{message}</SuccessMessage> : 
-          <ErrorMessage>{message}</ErrorMessage>)}
+        {message && (
+          message.includes('successfully') ? (
+            <SuccessMessage>{message}</SuccessMessage>
+          ) : (
+            <ErrorMessage>{message}</ErrorMessage>
+          )
+        )}
       </FormContainer>
     </LoadingContainer>
   );
-}
+};
 
 export default Loading;
