@@ -15,35 +15,14 @@ import black_knight from './assets/black_pieces/knight.png';
 import io from 'socket.io-client';
 
 function Game() {
+  const player = localStorage.getItem('color');
+  
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
     let url = 'http://localhost:8000/';
     return io(url);
   }, []);
 
-  const [isYourMove, setYourMove] = useState(true);
-
-  socket.on('makeMove', ({fromCoord, toCoord})=>{
-    console.log(fromCoord, toCoord);
-    let fromX = fromCoord.x;
-    let fromY = fromCoord.y;
-    let toX = toCoord.x;
-    let toY = toCoord.x;
-
-    const newPositions = positions.map(row => row.slice());
-    const capturedPiece = newPositions[toX][toY];
-    newPositions[toX][toY] = newPositions[fromX][fromY];
-    newPositions[fromX][fromY] = null;
-    setPositions(newPositions);
-    
-    if (capturedPiece) {
-      if (capturedPiece.color === "white") {
-        setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
-      } else if (capturedPiece.color === "black") {
-        setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
-      }
-    }
-  })
 
   const initialPositions = [
     [
@@ -99,18 +78,44 @@ function Game() {
   const [capturedWhitePieces, setCapturedWhitePieces] = useState([]);
   const [capturedBlackPieces, setCapturedBlackPieces] = useState([]);
 
+  socket.on('makeMove', ({fromCoord, toCoord})=>{
+    console.log(fromCoord, toCoord);
+    let fromX = fromCoord.x;
+    let fromY = fromCoord.y;
+    let toX = toCoord.x;
+    let toY = toCoord.y;
+
+    const newPositions = positions.map(row => row.slice());
+    const capturedPiece = newPositions[toX][toY];
+    newPositions[toX][toY] = newPositions[fromX][fromY];
+    newPositions[fromX][fromY] = null;
+    setPositions(newPositions);
+    
+    if (capturedPiece) {
+      if (capturedPiece.color === "white") {
+        setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
+      } else if (capturedPiece.color === "black") {
+        setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
+      }
+    }
+
+    setSelectedCell({ x: -1, y: -1 });
+    switchTurn();
+  })
+
+
   const handleCellClick = (x, y) => {
     const clickedPiece = positions[x][y];
 
     if (selectedCell.x === -1 && selectedCell.y === -1) {
       // No piece selected yet
-      if (clickedPiece && clickedPiece.color === whoseTurn) {
+      if (clickedPiece && player === whoseTurn && clickedPiece.color === whoseTurn) {
         setSelectedCell({ x, y });
         highlightPossibleMoves(x, y);
       }
     } else {
       // Piece already selected
-      if (clickedPiece && clickedPiece.color === whoseTurn) {
+      if (clickedPiece && player === whoseTurn && clickedPiece.color === whoseTurn) {
         // Select another piece of the same color
         setSelectedCell({ x, y });
         highlightPossibleMoves(x, y);
@@ -119,7 +124,6 @@ function Game() {
         movePiece(selectedCell.x, selectedCell.y, x, y);
         clearHighlightedCells();
         setSelectedCell({ x: -1, y: -1 });
-        switchTurn();
       } else {
         alert("Invalid move!");
       }
@@ -351,10 +355,16 @@ function Game() {
         setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
       }
     }
+
+    switchTurn();
   };
 
   const switchTurn = () => {
-    setWhoseTurn(prev => (prev === "white" ? "black" : "white"));
+    if(whoseTurn === "black") {
+      setWhoseTurn("white");
+    }else{
+      setWhoseTurn("black");
+    }
   };
 
   return (

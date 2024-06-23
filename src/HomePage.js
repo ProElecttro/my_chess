@@ -5,7 +5,8 @@ import io from 'socket.io-client';
 import Loading from './loading';
 
 const HomePage = ({ roomCode, setRoomCode }) => {
-  const [roomSize, setRoomSize] = useState(0); // Track room size
+  let isempty = true;
+  const [roomSize, setRoomSize] = useState(0);
   const navigate = useNavigate();
 
   const socket = useMemo(() => {
@@ -15,22 +16,29 @@ const HomePage = ({ roomCode, setRoomCode }) => {
   }, []);
 
   useEffect(() => {
-    const handlePlayerJoined = (playerName) => {
-      console.log(`${playerName} joined the room`);
-      setRoomSize((prevSize) => prevSize + 1); // Increment room size on player join
+    const handlePlayerJoined = (playerName, playerColor) => {
+      console.log('Received color:', playerColor);
+      if (isempty) {
+        isempty = false;
+        localStorage.setItem('color', playerColor)
+      }
+
+      setRoomSize((prevSize) => prevSize + 1);
     };
+
     socket.on('playerJoined', handlePlayerJoined);
 
     const handleStartGame = ({ gameId, board }) => {
       console.log(`Game started with ID: ${gameId}`);
       navigate(`/game/${gameId}`);
     };
+
     socket.on('startGame', handleStartGame);
 
     const handleRoomFull = () => {
       alert('Room is full. Please try another room.');
-      // Handle UI feedback for room full
     };
+
     socket.on('roomFull', handleRoomFull);
 
     return () => {
@@ -44,11 +52,15 @@ const HomePage = ({ roomCode, setRoomCode }) => {
 
   const handleJoinRoom = () => {
     if (roomCode) {
-      socket.emit('joinRoom', roomCode, 'PlayerName'); // Replace 'PlayerName' with actual player name
+      socket.emit('joinRoom', roomCode, 'PlayerName');
     } else {
       alert('Please enter or generate a room code first.');
     }
   };
+
+  if (roomSize === 1) {
+    return <Loading roomCode={roomCode} />;
+  }
 
   const handleGenerateRoomCode = () => {
     const generatedCode = generateRandomRoomCode();
@@ -63,13 +75,6 @@ const HomePage = ({ roomCode, setRoomCode }) => {
     }
     return code;
   };
-
-  // Conditional rendering based on room size
-  if (roomSize === 1) {
-    return (
-      <Loading roomCode={roomCode} />
-    );
-  }
 
   return (
     <div className={styles.homepage}>

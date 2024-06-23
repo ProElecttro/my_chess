@@ -3,7 +3,6 @@ import styled, { keyframes } from 'styled-components';
 import { Rings } from 'react-loader-spinner';
 import emailjs from 'emailjs-com';
 
-// Keyframes for loader animation
 const pulse = keyframes`
   0% {
     transform: scale(0.8);
@@ -16,7 +15,6 @@ const pulse = keyframes`
   }
 `;
 
-// Styled container for the loading screen
 const LoadingContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,7 +25,6 @@ const LoadingContainer = styled.div`
   padding: 20px;
 `;
 
-// Styled text content within the loading screen
 const LoadingText = styled.div`
   margin-top: 20px;
   text-align: center;
@@ -35,13 +32,11 @@ const LoadingText = styled.div`
   color: #333;
 `;
 
-// Styled loader component with added spacing
 const StyledLoader = styled(Rings)`
   margin: 40px 0; /* Adjusted margin for spacing */
   animation: ${pulse} 1.5s ease-in-out infinite; /* Apply pulse animation to the loader */
 `;
 
-// Styled room ID
 const RoomID = styled.div`
   font-size: 36px;
   font-weight: bold;
@@ -49,7 +44,6 @@ const RoomID = styled.div`
   margin-bottom: 20px;
 `;
 
-// Styled form container
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,7 +53,6 @@ const FormContainer = styled.div`
   margin-top: 20px;
 `;
 
-// Styled input fields
 const InputField = styled.input`
   width: 100%;
   padding: 10px;
@@ -69,7 +62,6 @@ const InputField = styled.input`
   font-size: 16px;
 `;
 
-// Styled button
 const Button = styled.button`
   padding: 10px 20px;
   margin-top: 10px;
@@ -95,8 +87,7 @@ const SuccessMessage = styled.div`
   margin-top: 10px;
 `;
 
-// Main Loading component
-const Loading = ({ roomCode }) => {
+const Loading = ({ roomCode, player }) => {
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
 
