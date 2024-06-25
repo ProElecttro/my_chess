@@ -1,29 +1,47 @@
 /* Game.module.css */
-*{
+* {
   margin: 0;
-  padding: 0
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #2b2b2b;
+  color: #333;
+  font-family: 'Arial', sans-serif;
 }
 
 .game {
+  background-color: #f8f9fa;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  gap: 2rem;
   align-items: center;
   font-family: Arial, sans-serif;
   margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-.board {
+.board,
+.reverseBoard {
   display: flex;
   flex-direction: column;
   border: 2px solid #333;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.reverseBoard {
+  transform: rotate(180deg);
 }
 
 .row {
   display: flex;
 }
 
-.cell {
+.cell,
+.reverseCell {
   width: 60px;
   height: 60px;
   display: flex;
@@ -31,32 +49,43 @@
   align-items: center;
   border: 1px solid #ccc;
   position: relative; /* Ensure z-index works for highlighting */
+  transition: background-color 0.3s ease;
 }
 
-/* Define light and dark squares */
-.row:nth-child(even) .cell:nth-child(even) {
+.row:nth-child(even) .cell:nth-child(even),
+.row:nth-child(even) .reverseCell:nth-child(even) {
   background-color: #f0d9b5; /* light square */
 }
 
-.row:nth-child(even) .cell:nth-child(odd) {
+.row:nth-child(even) .cell:nth-child(odd),
+.row:nth-child(even) .reverseCell:nth-child(odd) {
   background-color: #b58863; /* dark square */
 }
 
-.row:nth-child(odd) .cell:nth-child(even) {
+.row:nth-child(odd) .cell:nth-child(even),
+.row:nth-child(odd) .reverseCell:nth-child(even) {
   background-color: #b58863; /* dark square */
 }
 
-.row:nth-child(odd) .cell:nth-child(odd) {
+.row:nth-child(odd) .cell:nth-child(odd),
+.row:nth-child(odd) .reverseCell:nth-child(odd) {
   background-color: #f0d9b5; /* light square */
 }
 
-.cell:hover {
+.cell:hover,
+.reverseCell:hover {
   cursor: pointer;
+  background-color: rgba(255, 255, 0, 0.6); /* yellowish hover effect */
 }
 
-.cell img {
+.cell img,
+.reverseCell img {
   width: 100%;
   height: 100%;
+}
+
+.reverseCell {
+  transform: rotate(180deg);
 }
 
 .highlighted {
@@ -64,40 +93,52 @@
 }
 
 .capture {
-  background-color: red !important; /* Ensure it overrides other backgrounds */
+  background-color: #ff6b6b !important; /* Ensure it overrides other backgrounds */
 }
 
 .turnIndicator {
   margin-top: 10px;
   font-size: 20px;
+  color: #fff;
+  text-align: center;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .cell {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-.capturedPieces{
+.capturedPieces {
   display: flex;
   gap: 1rem;
+  margin-top: 10px;
 }
 
-.capturedPiecesList{
+.capturedPiecesList {
   width: 6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .capturedPiecesList ul {
   list-style-type: none;
+  padding: 0;
 }
 
-.kill img{
+.kill img {
   width: 1.5rem;
   height: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .cell,
+  .reverseCell {
+    width: 40px;
+    height: 40px;
+  }
+  .kill img {
+    width: 1rem;
+    height: 1rem;
+  }
 }

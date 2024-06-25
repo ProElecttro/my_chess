@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './Game.module.css';
 import black_pawn from './assets/black_pieces/pawn.png';
 import white_pawn from './assets/white_pieces/pawn.png';
@@ -13,6 +13,13 @@ import black_queen from './assets/black_pieces/queen.png';
 import white_knight from './assets/white_pieces/knight.png';
 import black_knight from './assets/black_pieces/knight.png';
 import io from 'socket.io-client';
+import ChatBox from './ChatBox';
+
+const move_self = "http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3";
+const capture = "http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3";
+// const castle = "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3"
+const moveSound = new Audio(move_self);
+const captureSound = new Audio(capture);
 
 function Game() {
   function getCookie(name) {
@@ -27,9 +34,9 @@ function Game() {
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
     let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/';
+    url = "http://localhost:8000/"
     return io(url);
   }, []);
-
 
   const initialPositions = [
     [
@@ -99,11 +106,14 @@ function Game() {
     setPositions(newPositions);
 
     if (capturedPiece) {
+      captureSound.play();
       if (capturedPiece.color === "white") {
         setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
       } else if (capturedPiece.color === "black") {
         setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
       }
+    } else {
+      moveSound.play();
     }
 
     setSelectedCell({ x: -1, y: -1 });
@@ -347,6 +357,7 @@ function Game() {
   };
 
   const movePiece = (fromX, fromY, toX, toY) => {
+    captureSound.play();
     const newPositions = positions.map(row => row.slice());
     const capturedPiece = newPositions[toX][toY];
     newPositions[toX][toY] = newPositions[fromX][fromY];
@@ -361,7 +372,10 @@ function Game() {
       } else if (capturedPiece.color === "black") {
         setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
       }
+    } else {
+      moveSound.play();
     }
+
 
     switchTurn();
   };
@@ -375,54 +389,56 @@ function Game() {
   };
 
   return (
-    <div className={styles.game}>
-      <div className={styles.capturedPieces}>
-        <div className={styles.capturedPiecesList}>
-          <ul>
-            <h4>White Kills</h4>
-            {capturedWhitePieces.map((piece, index) => (
-              <li key={index} className={styles.kill}>
-                <img src={piece.image} alt={piece.piece} />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className={styles.board}>
-          {positions.map((row, rowIndex) => (
-            <div key={rowIndex} className={styles.row}>
-              {row.map((cell, colIndex) => (
-                <div
-                  key={colIndex}
-                  className={`${styles.cell} ${highlightedCells[rowIndex][colIndex] === "skyblue"
-                    ? styles.highlighted
-                    : highlightedCells[rowIndex][colIndex] === "red"
-                      ? styles.capture
-                      : ""
-                    }`}
-                  onClick={() => handleCellClick(rowIndex, colIndex)}
-                >
-                  {cell && <img src={cell.image} alt={cell.piece} />}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        <div className={styles.capturedPiecesList}>
-          <ul>
-            <h4>Black Kills</h4>
-            {capturedBlackPieces.map((piece, index) => (
-              <li key={index} className={styles.kill}>
-                <img src={piece.image} alt={piece.piece} />
-              </li>
-            ))}
-          </ul>
-        </div>
-
-      </div>
+    <>
       <div className={styles.turnIndicator}>
-        Turn: {whoseTurn === "white" ? "White" : "Black"}
+        {whoseTurn === "white" ? "White" : "Black"}'s Turn
       </div>
-    </div>
+      <div className={styles.game}>
+        <ChatBox socket={socket}/>
+        <div className={styles.capturedPieces}>
+          <div className={styles.capturedPiecesList}>
+            <ul>
+              <h4>White Kills</h4>
+              {capturedWhitePieces.map((piece, index) => (
+                <li key={index} className={styles.kill}>
+                  <img src={piece.image} alt={piece.piece} />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={player === 'white' ? styles.board : player === 'black' ? styles.reverseBoard : ''}>
+            {positions.map((row, rowIndex) => (
+              <div key={rowIndex} className={styles.row}>
+                {row.map((cell, colIndex) => (
+                  <div
+                    key={colIndex}
+                    className={`${player === 'white' ? styles.cell : styles.reverseCell} ${highlightedCells[rowIndex][colIndex] === "skyblue"
+                      ? styles.highlighted
+                      : highlightedCells[rowIndex][colIndex] === "red"
+                        ? styles.capture
+                        : ""
+                      }`}
+                    onClick={() => handleCellClick(rowIndex, colIndex)}
+                  >
+                    {cell && <img src={cell.image} alt={cell.piece} />}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className={styles.capturedPiecesList}>
+            <ul>
+              <h4>Black Kills</h4>
+              {capturedBlackPieces.map((piece, index) => (
+                <li key={index} className={styles.kill}>
+                  <img src={piece.image} alt={piece.piece} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
