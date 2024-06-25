@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+# Online Chess Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to my online chess game project! This application is built using Node.js and React, and it features real-time gameplay powered by Socket.io. The entire logic of the chess game was implemented from scratch without using any external APIs.
 
-## Available Scripts
+## Demo
 
-In the project directory, you can run:
+Check out this cool video showcasing the game:
 
-### `npm start`
+[![Check out this video](https://img.youtube.com/vi/2o9hRsCr3yQ/0.jpg)](https://youtu.be/2o9hRsCr3yQ)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+You can also play the game online:
+- Hosted on AWS: [Play on AWS](http://15.206.72.127:3000/)
+- Hosted on Vercel: [Play on Vercel](https://my-chess-eta.vercel.app/)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Table of Contents
 
-### `npm test`
+- [Demo](#demo)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+- **Real-Time Multiplayer:** Seamless real-time gameplay with Socket.io.
+- **Custom Game Logic:** Entire chess logic implemented without external APIs.
+- **Modern UI:** Clean and intuitive user interface with React.
+- **Responsive Design:** Optimized for both desktop and mobile devices.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Technologies Used
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Frontend:** React, HTML, CSS
+- **Backend:** Node.js, Express
+- **Websockets:** Socket.io
+- **Deployment:** AWS, Vercel
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+### Prerequisites
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Make sure you have the following installed:
+- Node.js
+- npm (Node package manager)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Clone the repositories:**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```bash
+   git clone https://github.com/ProElecttro/my_chess.git
+   git clone https://github.com/ProElecttro/my_chess_server.git
+   ```
 
-## Learn More
+2. **Install dependencies:**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   For the client:
+   ```bash
+   cd my_chess
+   npm install
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   For the server:
+   ```bash
+   cd ../my_chess_server
+   npm install
+   ```
 
-### Code Splitting
+### Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. **Start the server:**
 
-### Analyzing the Bundle Size
+   ```bash
+   cd my_chess_server
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. **Start the client:**
 
-### Making a Progressive Web App
+   Open a new terminal window and run:
+   ```bash
+   cd my_chess
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+3. **Open the game:**
 
-### Advanced Configuration
+   Open your browser and go to `http://localhost:3000`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contributing
 
-### Deployment
+Contributions are welcome! Feel free to fork the project, open an issue, or submit a pull request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+Thank you for checking out my online chess game! If you enjoyed it, please consider giving the project a star and sharing it with others.
+
+Happy coding! 🎉
+
+---
+
+#Nodejs #React #ChessGame #SocketIO #WebDevelopment #FullStackDevelopment #AWS #Vercel
