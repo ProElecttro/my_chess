@@ -17,9 +17,15 @@ import ChatBox from './ChatBox';
 
 const move_self = "http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3";
 const capture = "http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3";
-// const castle = "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3"
 const moveSound = new Audio(move_self);
 const captureSound = new Audio(capture);
+const playMoveSound = () => {
+  moveSound.play();
+};
+
+const playCaptureSound = () => {
+  captureSound.play();
+};
 
 function Game() {
   function getCookie(name) {
@@ -34,7 +40,6 @@ function Game() {
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
     let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/';
-    // url = "http://localhost:8000/"
     return io(url);
   }, []);
 
@@ -93,7 +98,6 @@ function Game() {
   const [capturedBlackPieces, setCapturedBlackPieces] = useState([]);
 
   socket.on('makeMove', ({ fromCoord, toCoord }) => {
-    console.log(fromCoord, toCoord);
     let fromX = fromCoord.x;
     let fromY = fromCoord.y;
     let toX = toCoord.x;
@@ -106,38 +110,33 @@ function Game() {
     setPositions(newPositions);
 
     if (capturedPiece) {
-      captureSound.play();
+      playCaptureSound();
       if (capturedPiece.color === "white") {
         setCapturedWhitePieces([...capturedWhitePieces, capturedPiece]);
       } else if (capturedPiece.color === "black") {
         setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
       }
     } else {
-      moveSound.play();
+      playMoveSound();
     }
 
     setSelectedCell({ x: -1, y: -1 });
     switchTurn();
   })
 
-
   const handleCellClick = (x, y) => {
     const clickedPiece = positions[x][y];
 
     if (selectedCell.x === -1 && selectedCell.y === -1) {
-      // No piece selected yet
       if (clickedPiece && player === whoseTurn && clickedPiece.color === whoseTurn) {
         setSelectedCell({ x, y });
         highlightPossibleMoves(x, y);
       }
     } else {
-      // Piece already selected
       if (clickedPiece && player === whoseTurn && clickedPiece.color === whoseTurn) {
-        // Select another piece of the same color
         setSelectedCell({ x, y });
         highlightPossibleMoves(x, y);
       } else if (highlightedCells[x][y]) {
-        // Move to the highlighted cell (can be an empty cell or capturing an opponent piece)
         movePiece(selectedCell.x, selectedCell.y, x, y);
         clearHighlightedCells();
         setSelectedCell({ x: -1, y: -1 });
@@ -184,7 +183,7 @@ function Game() {
 
   const highlightRookMoves = (x, y, newHighlightedCells) => {
     const pieceColor = positions[x][y].color;
-
+  
     // Vertical moves (up)
     for (let i = x - 1; i >= 0; i--) {
       if (!positions[i][y]) {
@@ -196,7 +195,7 @@ function Game() {
         break;
       }
     }
-
+  
     // Vertical moves (down)
     for (let i = x + 1; i < 8; i++) {
       if (!positions[i][y]) {
@@ -208,7 +207,7 @@ function Game() {
         break;
       }
     }
-
+  
     // Horizontal moves (left)
     for (let j = y - 1; j >= 0; j--) {
       if (!positions[x][j]) {
@@ -220,7 +219,7 @@ function Game() {
         break;
       }
     }
-
+  
     // Horizontal moves (right)
     for (let j = y + 1; j < 8; j++) {
       if (!positions[x][j]) {
@@ -246,68 +245,72 @@ function Game() {
       [x + 2, y - 1],
       [x + 2, y + 1]
     ];
-
+  
     knightMoves.forEach(([i, j]) => {
       if (i >= 0 && i < 8 && j >= 0 && j < 8) {
         if (!positions[i][j] || positions[i][j].color !== pieceColor) {
-          newHighlightedCells[i][j] = "skyblue";
+          newHighlightedCells[i][j] = !positions[i][j] ? "skyblue" : "red"; // Valid move or Capture move
         }
       }
     });
-  };
+  };  
 
   const highlightBishopMoves = (x, y, newHighlightedCells) => {
     const pieceColor = positions[x][y].color;
-
+  
+    // Top-left diagonal
     for (let i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--) {
       if (!positions[i][j]) {
-        newHighlightedCells[i][j] = "skyblue";
+        newHighlightedCells[i][j] = "skyblue"; // Valid move
       } else {
         if (positions[i][j].color !== pieceColor) {
-          newHighlightedCells[i][j] = "red";
+          newHighlightedCells[i][j] = "red"; // Capture move
         }
         break;
       }
     }
-
+  
+    // Top-right diagonal
     for (let i = x - 1, j = y + 1; i >= 0 && j < 8; i--, j++) {
       if (!positions[i][j]) {
-        newHighlightedCells[i][j] = "skyblue";
+        newHighlightedCells[i][j] = "skyblue"; // Valid move
       } else {
         if (positions[i][j].color !== pieceColor) {
-          newHighlightedCells[i][j] = "red";
+          newHighlightedCells[i][j] = "red"; // Capture move
         }
         break;
       }
     }
-
+  
+    // Bottom-left diagonal
     for (let i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--) {
       if (!positions[i][j]) {
-        newHighlightedCells[i][j] = "skyblue";
+        newHighlightedCells[i][j] = "skyblue"; // Valid move
       } else {
         if (positions[i][j].color !== pieceColor) {
-          newHighlightedCells[i][j] = "red";
+          newHighlightedCells[i][j] = "red"; // Capture move
         }
         break;
       }
     }
-
+  
+    // Bottom-right diagonal
     for (let i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++) {
       if (!positions[i][j]) {
-        newHighlightedCells[i][j] = "skyblue";
+        newHighlightedCells[i][j] = "skyblue"; // Valid move
       } else {
         if (positions[i][j].color !== pieceColor) {
-          newHighlightedCells[i][j] = "red";
+          newHighlightedCells[i][j] = "red"; // Capture move
         }
         break;
       }
     }
-  };
+  };  
 
   const highlightQueenMoves = (x, y, newHighlightedCells) => {
     highlightRookMoves(x, y, newHighlightedCells);
     highlightBishopMoves(x, y, newHighlightedCells);
-  };
+  };  
 
   const highlightKingMoves = (x, y, newHighlightedCells) => {
     const pieceColor = positions[x][y].color;
@@ -321,31 +324,33 @@ function Game() {
       [x + 1, y],
       [x + 1, y + 1]
     ];
-
+  
     kingMoves.forEach(([i, j]) => {
       if (i >= 0 && i < 8 && j >= 0 && j < 8) {
         if (!positions[i][j] || positions[i][j].color !== pieceColor) {
-          newHighlightedCells[i][j] = "skyblue";
+          newHighlightedCells[i][j] = !positions[i][j] ? "skyblue" : "red"; // Valid move or Capture move
         }
       }
     });
-  };
+  };  
 
   const highlightPawnMoves = (x, y, newHighlightedCells) => {
     const pieceColor = positions[x][y].color;
     const direction = pieceColor === "white" ? -1 : 1;
     const startRow = pieceColor === "white" ? 6 : 1;
     const opponentColor = pieceColor === "white" ? "black" : "white";
-
-    if (x + direction >= 0 && x + direction < 8) {
-      if (!positions[x + direction][y]) {
-        newHighlightedCells[x + direction][y] = "skyblue";
-        if (x === startRow && !positions[x + 2 * direction][y]) {
-          newHighlightedCells[x + 2 * direction][y] = "skyblue";
-        }
+  
+    // Move one step forward
+    if (x + direction >= 0 && x + direction < 8 && !positions[x + direction][y]) {
+      newHighlightedCells[x + direction][y] = "skyblue";
+  
+      // Move two steps forward from starting row
+      if (x === startRow && !positions[x + 2 * direction][y]) {
+        newHighlightedCells[x + 2 * direction][y] = "skyblue";
       }
     }
-
+  
+    // Capture diagonally
     if (x + direction >= 0 && x + direction < 8) {
       if (y > 0 && positions[x + direction][y - 1] && positions[x + direction][y - 1].color === opponentColor) {
         newHighlightedCells[x + direction][y - 1] = "red";
@@ -354,10 +359,20 @@ function Game() {
         newHighlightedCells[x + direction][y + 1] = "red";
       }
     }
+  
+    // En passant
+    if (x === 3 && y > 0 && positions[x][y - 1] && positions[x][y - 1].color === opponentColor &&
+        positions[x][y - 1].type === "pawn" && positions[x][y - 1].enPassantVulnerable) {
+      newHighlightedCells[x + direction][y - 1] = "red";
+    }
+    if (x === 3 && y < 7 && positions[x][y + 1] && positions[x][y + 1].color === opponentColor &&
+        positions[x][y + 1].type === "pawn" && positions[x][y + 1].enPassantVulnerable) {
+      newHighlightedCells[x + direction][y + 1] = "red";
+    }
   };
-
+  
   const movePiece = (fromX, fromY, toX, toY) => {
-    captureSound.play();
+    playCaptureSound();
     const newPositions = positions.map(row => row.slice());
     const capturedPiece = newPositions[toX][toY];
     newPositions[toX][toY] = newPositions[fromX][fromY];
@@ -373,7 +388,7 @@ function Game() {
         setCapturedBlackPieces([...capturedBlackPieces, capturedPiece]);
       }
     } else {
-      moveSound.play();
+      playMoveSound();
     }
 
 
@@ -394,7 +409,7 @@ function Game() {
         {whoseTurn === "white" ? "White" : "Black"}'s Turn
       </div>
       <div className={styles.game}>
-        <ChatBox socket={socket}/>
+        <ChatBox socket={socket} />
         <div className={styles.capturedPieces}>
           <div className={styles.capturedPiecesList}>
             <ul>

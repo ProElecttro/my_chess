@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ChatBox.module.css';
 
-const ChatBox = ({ socket }) => {
+const ChatBox = ({ socket, user }) => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         socket.on('sendMessage', (msg) => {
-            console.log(msg)
-            setMessages((prevMessages) => [...prevMessages, msg]);
+            setMessages((prevMessages) => [...prevMessages, { msg: msg, type: 'received' }]);
         });
 
         return () => {
-            socket.off('chatMessage');
+            socket.off('sendMessage');
         };
     }, [socket]);
 
     const sendMessage = (e) => {
         e.preventDefault();
         if (message.trim()) {
-            socket.emit('chatMessage', message);
+            const msg = { text: message, user };
+            socket.emit('chatMessage', msg);
+            setMessages((prevMessages) => [...prevMessages, { msg: msg, type: 'sent' }]);
             setMessage('');
         }
     };
@@ -27,9 +28,12 @@ const ChatBox = ({ socket }) => {
     return (
         <div className={styles.chatBox}>
             <div className={styles.messages}>
-                {messages.map((msg, index) => (
-                    <div key={index} className={styles.message}>
-                        {msg}
+                {messages.map(({ msg, type }, index) => (
+                    <div
+                        key={index}
+                        className={`${styles.message} ${type === 'sent' ? styles.myMessage : styles.otherMessage}`}
+                    >
+                        {msg.text}
                     </div>
                 ))}
             </div>

@@ -1,55 +1,67 @@
 .chatBox {
-    display: flex;
-    flex-direction: column;
-    width: 100%; /* Adjusted for responsiveness */
-    max-width: 300px;
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-right: 1px solid #ccc;
-    height: 60vh;
-    box-sizing: border-box;
-    overflow: hidden; /* Prevents unnecessary scrollbar */
-  }
-  
-  .messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    margin-bottom: 10px;
-  }
-  
-  .message {
-    background-color: #fff;
-    margin-bottom: 5px;
-    padding: 10px;
-    border-radius: 8px; /* Increased border radius for better appearance */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
-  }
-  
-  .messageForm {
-    display: flex;
-    align-items: center; /* Center align items vertically */
-  }
-  
-  .messageInput {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px; /* Adjust font size for better readability */
-  }
-  
-  .sendButton {
-    padding: 8px 15px; /* Increased padding for better touchability */
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-left: 10px; /* Slightly increased margin */
-    transition: background-color 0.3s ease; /* Smooth hover transition */
-  }
-  
-  .sendButton:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-right: 1px solid #ccc;
+  height: 60vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin-bottom: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.myMessage {
+  background-color: #a1c0e0;
+  color: rgb(0, 0, 0);
+  align-self: flex-end;
+  text-align: right;
+}
+
+.otherMessage {
+  background-color: #e5e5ea;
+  color: black;
+  align-self: flex-start;
+  text-align: left;
+}
+
+.messageForm {
+  display: flex;
+  align-items: center;
+}
+
+.messageInput {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.sendButton {
+  padding: 8px 15px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.sendButton:hover {
+  background-color: #0056b3;
+}
