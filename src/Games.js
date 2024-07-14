@@ -40,6 +40,7 @@ function Game() {
   const socket = useMemo(() => {
     console.log('Creating socket instance...');
     let url = 'http://ec2-13-232-79-219.ap-south-1.compute.amazonaws.com:8000/';
+    // url = "http://localhost:8000/"
     return io(url);
   }, []);
 
@@ -97,6 +98,15 @@ function Game() {
   const [capturedWhitePieces, setCapturedWhitePieces] = useState([]);
   const [capturedBlackPieces, setCapturedBlackPieces] = useState([]);
 
+  const [match, setMatch] = useState(true);
+
+  useEffect(()=>{
+    if(!match){
+      setPositions(initialPositions);
+      setHighlightedCells(Array.from({ length: 8 }, () => Array(8).fill(null)));
+    }
+  },[match])
+
   socket.on('makeMove', ({ fromCoord, toCoord }) => {
     let fromX = fromCoord.x;
     let fromY = fromCoord.y;
@@ -105,6 +115,11 @@ function Game() {
 
     const newPositions = positions.map(row => row.slice());
     const capturedPiece = newPositions[toX][toY];
+    if(capturedPiece && capturedPiece.piece === "king"){
+      alert((player === "white") ? "black" : "white" + " Won the Match!");
+      // setMatch(false);
+      return;
+    }
     newPositions[toX][toY] = newPositions[fromX][fromY];
     newPositions[fromX][fromY] = null;
     setPositions(newPositions);
@@ -375,6 +390,12 @@ function Game() {
     playCaptureSound();
     const newPositions = positions.map(row => row.slice());
     const capturedPiece = newPositions[toX][toY];
+    if(capturedPiece && capturedPiece.piece === "king"){
+      alert(player + " Won the Match!");
+      socket.emit('movePiece', { from: { x: fromX, y: fromY }, to: { x: toX, y: toY } });
+      setMatch(false);
+      return;
+    }
     newPositions[toX][toY] = newPositions[fromX][fromY];
     newPositions[fromX][fromY] = null;
     setPositions(newPositions);

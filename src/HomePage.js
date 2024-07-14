@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './homepage.module.css';
 import io from 'socket.io-client';
 import Loading from './loading';
+import PlayButton from './components/playButton';
 
 const HomePage = ({ roomCode, setRoomCode }) => {
   let isempty = true;
@@ -89,9 +90,12 @@ const HomePage = ({ roomCode, setRoomCode }) => {
           value={roomCode}
           onChange={(e) => setRoomCode(e.target.value)}
         />
-        <button className={styles.joinButton} onClick={handleJoinRoom}>
+        {/* <button className={styles.joinButton} onClick={handleJoinRoom}>
           Join Room
-        </button>
+        </button> */}
+        <div >
+          <PlayButton action={handleJoinRoom}/>
+        </div>
       </div>
       <div className={styles.or}>
         <p>or</p>

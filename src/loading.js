@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Rings } from 'react-loader-spinner';
 import emailjs from 'emailjs-com';
+import InviteButton from './components/inviteButton';
 
 const pulse = keyframes`
   0% {
@@ -132,7 +133,10 @@ const Loading = ({ roomCode, player }) => {
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
           />
-          <Button type="submit">Send Room Code</Button>
+          <div>
+            <InviteButton type="submit"/> 
+          </div>
+          
         </form>
         {message && (
           message.includes('successfully') ? (
